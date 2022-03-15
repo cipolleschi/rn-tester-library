@@ -17,6 +17,16 @@ const RnTesterLibrary = NativeModules.RnTesterLibrary
       }
     );
 
-export function multiply(a: number, b: number): Promise<number> {
-  return RnTesterLibrary.multiply(a, b);
+export type AuthorizationStatus = "Unknown" |
+  "Denied" |
+  "Ephemeral" |
+  "Authorized" |
+  "Provisional" ;
+
+export function getCurrentStatus(): Promise<AuthorizationStatus> {
+  return RnTesterLibrary.getCurrentStatus();
+}
+
+export function askPermissions(): Promise<AuthorizationStatus> {
+  return RnTesterLibrary.askPermissions();
 }

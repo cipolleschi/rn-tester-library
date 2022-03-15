@@ -1,18 +1,30 @@
 import * as React from 'react';
 
-import { StyleSheet, View, Text } from 'react-native';
-import { multiply } from 'rn-tester-library';
+import { useState } from 'react';
+import { StyleSheet, View, Text, Button } from 'react-native';
+import { AuthorizationStatus, askPermissions, getCurrentStatus } from 'rn-tester-library';
 
 export default function App() {
-  const [result, setResult] = React.useState<number | undefined>();
+
+  const [currentState, setCurrentState] = useState<AuthorizationStatus>('Unknown');
 
   React.useEffect(() => {
-    multiply(3, 7).then(setResult);
-  }, []);
+    async function setInitialState() {
+      let newState = await getCurrentStatus();
+      setCurrentState(newState)
+    }
+    setInitialState()
+  }, [])
 
   return (
     <View style={styles.container}>
-      <Text>Result: {result}</Text>
+      <Button title="Ask Permissions" onPress={async () => {
+        let newState = await askPermissions();
+        setCurrentState(newState)
+      }} />
+      <View>
+        <Text>Authorization status: {currentState}</Text>
+      </View>
     </View>
   );
 }
